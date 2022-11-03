@@ -23,59 +23,46 @@ namespace Aps6Api.Setores_Controllers
 
         // GET: api/Setores
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Setor>>> GetSetores()
+        public async Task<ActionResult<IEnumerable<SetorDTO>>> GetSetores()
         {
-          if (_context.Setores == null)
-          {
-              return NotFound();
-          }
-            return await _context.Setores.ToListAsync();
+            return await _context.Setores
+                .Select(x => SetorToDTO(x))
+                .ToListAsync();
         }
 
         // GET: api/Setores/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Setor>> GetSetor(Guid id)
+        public async Task<ActionResult<SetorDTO>> GetSetor(long id)
         {
-          if (_context.Setores == null)
-          {
-              return NotFound();
-          }
-            var setor = await _context.Setores.FindAsync(id);
+            var Setor = await _context.Setores.FindAsync(id);
 
-            if (setor == null)
-            {
+            if (Setor == null)
                 return NotFound();
-            }
 
-            return setor;
+            return SetorToDTO(Setor);
         }
 
         // PUT: api/Setores/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSetor(Guid id, Setor setor)
+        public async Task<IActionResult> UpdateSetor(/*long*/Guid id, SetorDTO setorDTO)
         {
-            if (id != setor.Id)
-            {
+            if (id != setorDTO.Id)
                 return BadRequest();
-            }
 
-            _context.Entry(setor).State = EntityState.Modified;
+            var Setor = await _context.Setores.FindAsync(id);
+            if (Setor == null)
+                return NotFound();
+
+            Setor.Nome = setorDTO.Nome;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!SetorExists(id))
             {
-                if (!SetorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -84,33 +71,32 @@ namespace Aps6Api.Setores_Controllers
         // POST: api/Setores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Setor>> PostSetor(Setor setor)
+        public async Task<ActionResult<SetorDTO>> CreateSetor(SetorDTO setorDTO)
         {
-          if (_context.Setores == null)
-          {
-              return Problem("Entity set 'SetoresContext.Setores'  is null.");
-          }
-            _context.Setores.Add(setor);
+            var Setor = new Setor
+            {
+                Nome = setorDTO.Nome
+            };
+
+            _context.Setores.Add(Setor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSetor", new { id = setor.Id }, setor);
+            return CreatedAtAction(
+                nameof(GetSetor),
+                new { id = Setor.Id },
+                SetorToDTO(Setor));
         }
 
         // DELETE: api/Setores/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSetor(Guid id)
+        public async Task<IActionResult> DeleteSetor(/*long*/Guid id)
         {
-            if (_context.Setores == null)
-            {
-                return NotFound();
-            }
-            var setor = await _context.Setores.FindAsync(id);
-            if (setor == null)
-            {
-                return NotFound();
-            }
+            var Setor = await _context.Setores.FindAsync(id);
 
-            _context.Setores.Remove(setor);
+            if (Setor == null)
+                return NotFound();
+
+            _context.Setores.Remove(Setor);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -120,5 +106,11 @@ namespace Aps6Api.Setores_Controllers
         {
             return (_context.Setores?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        private static SetorDTO SetorToDTO(Setor setor) =>
+            new SetorDTO
+            {
+                Nome = setor.Nome
+            };
     }
 }

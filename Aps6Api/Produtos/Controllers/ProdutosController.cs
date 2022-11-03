@@ -23,59 +23,47 @@ namespace Aps6Api.Produtos_Controllers
 
         // GET: api/Produtos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
+        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> GetProdutos()
         {
-          if (_context.Produtos == null)
-          {
-              return NotFound();
-          }
-            return await _context.Produtos.ToListAsync();
+            return await _context.Produtos
+                .Select(x => ProdutoToDTO(x))
+                .ToListAsync();
         }
 
         // GET: api/Produtos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Produto>> GetProduto(Guid id)
+        public async Task<ActionResult<ProdutoDTO>> GetProduto(long id)
         {
-          if (_context.Produtos == null)
-          {
-              return NotFound();
-          }
-            var produto = await _context.Produtos.FindAsync(id);
+            var Produto = await _context.Produtos.FindAsync(id);
 
-            if (produto == null)
-            {
+            if (Produto == null)
                 return NotFound();
-            }
 
-            return produto;
+            return ProdutoToDTO(Produto);
         }
 
         // PUT: api/Produtos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduto(Guid id, Produto produto)
+        public async Task<IActionResult> UpdateProduto(/*long*/Guid id, ProdutoDTO produtoDTO)
         {
-            if (id != produto.Id)
-            {
+            if (id != produtoDTO.Id)
                 return BadRequest();
-            }
 
-            _context.Entry(produto).State = EntityState.Modified;
+            var Produto = await _context.Produtos.FindAsync(id);
+            if (Produto == null)
+                return NotFound();
+
+            Produto.Nome = produtoDTO.Nome;
+            Produto.Setor = produtoDTO.Setor;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!ProdutoExists(id))
             {
-                if (!ProdutoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -84,33 +72,33 @@ namespace Aps6Api.Produtos_Controllers
         // POST: api/Produtos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Produto>> PostProduto(Produto produto)
+        public async Task<ActionResult<ProdutoDTO>> CreateProduto(ProdutoDTO produtoDTO)
         {
-          if (_context.Produtos == null)
-          {
-              return Problem("Entity set 'ProdutosContext.Produtos'  is null.");
-          }
-            _context.Produtos.Add(produto);
+            var Produto = new Produto
+            {
+                Nome = produtoDTO.Nome,
+                Setor = produtoDTO.Setor,
+            };
+
+            _context.Produtos.Add(Produto);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduto", new { id = produto.Id }, produto);
+            return CreatedAtAction(
+                nameof(GetProduto),
+                new { id = Produto.Id },
+                ProdutoToDTO(Produto));
         }
 
         // DELETE: api/Produtos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduto(Guid id)
+        public async Task<IActionResult> DeleteProduto(/*long*/Guid id)
         {
-            if (_context.Produtos == null)
-            {
-                return NotFound();
-            }
-            var produto = await _context.Produtos.FindAsync(id);
-            if (produto == null)
-            {
-                return NotFound();
-            }
+            var Produto = await _context.Produtos.FindAsync(id);
 
-            _context.Produtos.Remove(produto);
+            if (Produto == null)
+                return NotFound();
+
+            _context.Produtos.Remove(Produto);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -120,5 +108,12 @@ namespace Aps6Api.Produtos_Controllers
         {
             return (_context.Produtos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        private static ProdutoDTO ProdutoToDTO(Produto produto) =>
+            new ProdutoDTO
+            {
+                Nome = produto.Nome,
+                Setor = produto.Setor,
+            };
     }
 }
