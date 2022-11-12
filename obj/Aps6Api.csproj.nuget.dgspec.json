@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Yan\\Desktop\\APS6\\aps6-api\\Aps6Api\\Aps6Api.csproj": {}
+    "C:\\Users\\gilbe\\Documents\\Faculdade\\6Sem\\APS 6\\aps6-api\\Aps6Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Yan\\Desktop\\APS6\\aps6-api\\Aps6Api\\Aps6Api.csproj": {
+    "C:\\Users\\gilbe\\Documents\\Faculdade\\6Sem\\APS 6\\aps6-api\\Aps6Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Yan\\Desktop\\APS6\\aps6-api\\Aps6Api\\Aps6Api.csproj",
+        "projectUniqueName": "C:\\Users\\gilbe\\Documents\\Faculdade\\6Sem\\APS 6\\aps6-api\\Aps6Api.csproj",
         "projectName": "Aps6Api",
-        "projectPath": "C:\\Users\\Yan\\Desktop\\APS6\\aps6-api\\Aps6Api\\Aps6Api.csproj",
-        "packagesPath": "C:\\Users\\Yan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Yan\\Desktop\\APS6\\aps6-api\\Aps6Api\\obj\\",
+        "projectPath": "C:\\Users\\gilbe\\Documents\\Faculdade\\6Sem\\APS 6\\aps6-api\\Aps6Api.csproj",
+        "packagesPath": "C:\\Users\\gilbe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gilbe\\Documents\\Faculdade\\6Sem\\APS 6\\aps6-api\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Yan\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\gilbe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -48,7 +44,7 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[6.0.10, )"
+              "version": "[7.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
@@ -86,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
