@@ -831,3 +831,14 @@ C:\Users\Yan\Desktop\APS6\aps6-api\obj\Debug\net6.0\refint\Aps6Api.dll
 C:\Users\Yan\Desktop\APS6\aps6-api\obj\Debug\net6.0\Aps6Api.pdb
 C:\Users\Yan\Desktop\APS6\aps6-api\obj\Debug\net6.0\Aps6Api.genruntimeconfig.cache
 C:\Users\Yan\Desktop\APS6\aps6-api\obj\Debug\net6.0\ref\Aps6Api.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\DnsClient.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\MongoDB.Bson.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\MongoDB.Driver.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\MongoDB.Driver.Core.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\MongoDB.Libmongocrypt.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\SharpCompress.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\Snappier.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\ZstdSharp.dll
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\runtimes\linux\native\libmongocrypt.so
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\runtimes\osx\native\libmongocrypt.dylib
+C:\Users\Yan\Desktop\APS6\aps6-api\bin\Debug\net6.0\runtimes\win\native\mongocrypt.dll

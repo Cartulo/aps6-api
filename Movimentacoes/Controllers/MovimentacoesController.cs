@@ -1,128 +1,71 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Aps6Api.Movimentacoes;
-using Aps6Api.Movimentacoes.Contexts;
+using Aps6Api.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Aps6Api.Movimentacoes_Controllers
+namespace Aps6Api.Controllers;
+
+[ApiController]
+[Route("api/movimentacoes")]
+public class MovimentacoesController : ControllerBase
 {
-    [Route("api/movimentacoes")]
-    [ApiController]
-    public class MovimentacoesController : ControllerBase
+    private readonly MovimentacoesService _movimentacoesService;
+
+    public MovimentacoesController(MovimentacoesService movimentacoesService) =>
+        _movimentacoesService = movimentacoesService;
+
+    [HttpGet]
+    public async Task<List<Movimentacao>> Get() => await _movimentacoesService.GetAsync();
+
+    [HttpGet("{id:length(24)}")]
+    public async Task<ActionResult<Movimentacao>> Get(string id)
     {
-        private readonly MovimentacoesContext _context;
+        var Movimentacao = await _movimentacoesService.GetAsync(id);
 
-        public MovimentacoesController(MovimentacoesContext context)
+        if (Movimentacao is null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        // GET: api/Movimentacoes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovimentacaoDTO>>> GetMovimentacoes()
+        return Movimentacao;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(Movimentacao newMovimentacao)
+    {
+        await _movimentacoesService.CreateAsync(newMovimentacao);
+
+        return CreatedAtAction(nameof(Get), new { id = newMovimentacao.Id }, newMovimentacao);
+    }
+
+    [HttpPut("{id:length(24)}")]
+    public async Task<IActionResult> Update(string id, Movimentacao updatedMovimentacao)
+    {
+        var Movimentacao = await _movimentacoesService.GetAsync(id);
+
+        if (Movimentacao is null)
         {
-            return await _context.Movimentacoes
-                .Select(x => MovimentacaoToDTO(x))
-                .ToListAsync();
+            return NotFound();
         }
 
-        // GET: api/Movimentacoes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MovimentacaoDTO>> GetMovimentacao(long id)
+        updatedMovimentacao.Id = Movimentacao.Id;
+
+        await _movimentacoesService.UpdateAsync(id, updatedMovimentacao);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:length(24)}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var Movimentacao = await _movimentacoesService.GetAsync(id);
+
+        if (Movimentacao is null)
         {
-            var movimentacao = await _context.Movimentacoes.FindAsync(id);
-
-            if (movimentacao == null)
-                return NotFound();
-
-            return MovimentacaoToDTO(movimentacao);
+            return NotFound();
         }
 
-        // PUT: api/Movimentacoes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMovimentacao(/*long*/Guid id, MovimentacaoDTO movimentacaoDTO)
-        {
-            if (id != movimentacaoDTO.Id)
-                return BadRequest();
+        await _movimentacoesService.RemoveAsync(id);
 
-            var movimentacao = await _context.Movimentacoes.FindAsync(id);
-            if (movimentacao == null)
-                return NotFound();
-
-            movimentacao.Nome = movimentacaoDTO.Nome;
-            movimentacao.Quantidade = movimentacaoDTO.Quantidade;
-            movimentacao.QuantidadeMinima = movimentacaoDTO.QuantidadeMinima;
-            movimentacao.DataEntrada = movimentacaoDTO.DataEntrada;
-            movimentacao.DataSaida = movimentacaoDTO.DataSaida;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException) when (!MovimentacaoExists(id))
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Movimentacoes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<MovimentacaoDTO>> CreateMovimentacao(MovimentacaoDTO movimentacaoDTO)
-        {
-            var movimentacao = new Movimentacao
-            {
-                Nome = movimentacaoDTO.Nome,
-                Quantidade = movimentacaoDTO.Quantidade,
-                QuantidadeMinima = movimentacaoDTO.QuantidadeMinima,
-                DataEntrada = movimentacaoDTO.DataEntrada,
-                DataSaida = movimentacaoDTO.DataSaida
-            };
-
-            _context.Movimentacoes.Add(movimentacao);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(
-                nameof(GetMovimentacao),
-                new { id = movimentacao.Id },
-                MovimentacaoToDTO(movimentacao));
-        }
-
-        // DELETE: api/Movimentacoes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovimentacao(/*long*/Guid id)
-        {
-            var movimentacao = await _context.Movimentacoes.FindAsync(id);
-
-            if (movimentacao == null)
-                return NotFound();
-
-            _context.Movimentacoes.Remove(movimentacao);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool MovimentacaoExists(Guid id)
-        {
-            return (_context.Movimentacoes?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-
-        private static MovimentacaoDTO MovimentacaoToDTO(Movimentacao movimentacao) =>
-            new MovimentacaoDTO
-            {
-                Nome = movimentacao.Nome,
-                Quantidade = movimentacao.Quantidade,
-                QuantidadeMinima = movimentacao.QuantidadeMinima,
-                DataEntrada = movimentacao.DataEntrada,
-                DataSaida = movimentacao.DataSaida
-            };
+        return NoContent();
     }
 }
