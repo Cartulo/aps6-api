@@ -10,7 +10,7 @@ using Aps6Api.Setores.Contexts;
 
 namespace Aps6Api.Setores_Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/setores")]
     [ApiController]
     public class SetoresController : ControllerBase
     {

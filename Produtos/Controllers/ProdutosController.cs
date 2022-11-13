@@ -10,7 +10,7 @@ using Aps6Api.Produtos.Contexts;
 
 namespace Aps6Api.Produtos_Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/produtos")]
     [ApiController]
     public class ProdutosController : ControllerBase
     {

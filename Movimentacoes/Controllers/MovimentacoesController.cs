@@ -10,7 +10,7 @@ using Aps6Api.Movimentacoes.Contexts;
 
 namespace Aps6Api.Movimentacoes_Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/movimentacoes")]
     [ApiController]
     public class MovimentacoesController : ControllerBase
     {
