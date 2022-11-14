@@ -14,8 +14,9 @@ services.AddEndpointsApiExplorer();
 
 services.AddSwaggerGen();
 
+var politicaCors = "_Aps6policy";
 services.AddCors(o =>
-    o.AddPolicy("MyPolicy", builder =>
+    o.AddPolicy(name: politicaCors, builder =>
         {
             builder.WithOrigins("http://localhost.com:7070")
                 .AllowAnyMethod()
@@ -34,9 +35,11 @@ if (builder.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseRouting();
 
-app.UseCors("MyPolicy");
+app.UseCors(politicaCors);
 
 app.UseAuthorization();
 

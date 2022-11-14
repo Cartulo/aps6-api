@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Cors;
 namespace Aps6Api.Controllers;
 
 [ApiController]
-[EnableCors("MyPolicy")]
+[EnableCors("_Aps6policy")]
 [Route("api/setores")]
 public class SetoresController : ControllerBase
 {
