@@ -1,10 +1,12 @@
 using Aps6Api.Produtos;
 using Aps6Api.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aps6Api.Controllers;
 
 [ApiController]
+[EnableCors("MyPolicy")]
 [Route("api/produtos")]
 public class ProdutosController : ControllerBase
 {

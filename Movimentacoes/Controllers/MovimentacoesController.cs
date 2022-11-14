@@ -1,10 +1,12 @@
 using Aps6Api.Movimentacoes;
 using Aps6Api.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aps6Api.Controllers;
 
 [ApiController]
+[EnableCors("MyPolicy")]
 [Route("api/movimentacoes")]
 public class MovimentacoesController : ControllerBase
 {

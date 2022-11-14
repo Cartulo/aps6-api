@@ -17,16 +17,13 @@ services.AddSingleton<SetoresService>();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 // builder.Services.AddSwaggerAps6();
-// builder.Services.AddCors(options =>
-// {
-//     options.AddPolicy(name: MyAllowSpecificOrigins,
-//                       builder =>
-//                       {
-//                           builder.AllowAnyHeader()
-//                                  .AllowAnyMethod()
-//                                  .AllowAnyOrigin();
-//                       });
-// });
+services.AddCors(o => 
+    o.AddPolicy("MyPolicy", builder =>
+        {
+            builder.WithOrigins("http://localhost.com:7070")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }));
 
 // Add services to the container.
 
@@ -48,6 +45,10 @@ if (builder.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+// app.UseStaticFiles();
+
+app.UseCors("MyPolicy");
 
 app.UseAuthorization();
 

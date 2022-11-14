@@ -1,10 +1,12 @@
 using Aps6Api.Setores;
 using Aps6Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 namespace Aps6Api.Controllers;
 
 [ApiController]
+[EnableCors("MyPolicy")]
 [Route("api/setores")]
 public class SetoresController : ControllerBase
 {
