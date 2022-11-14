@@ -12,8 +12,7 @@ public class SetoresController : ControllerBase
 {
     private readonly SetoresService _setoresService;
 
-    public SetoresController(SetoresService setoresService) =>
-        _setoresService = setoresService;
+    public SetoresController(SetoresService setoresService) => _setoresService = setoresService;
 
     [HttpGet]
     public async Task<List<Setor>> Get() => await _setoresService.GetAsync();
@@ -23,10 +22,7 @@ public class SetoresController : ControllerBase
     {
         var Setor = await _setoresService.GetAsync(id);
 
-        if (Setor is null)
-        {
-            return NotFound();
-        }
+        if (Setor is null) return NotFound();
 
         return Setor;
     }
@@ -44,10 +40,7 @@ public class SetoresController : ControllerBase
     {
         var Setor = await _setoresService.GetAsync(id);
 
-        if (Setor is null)
-        {
-            return NotFound();
-        }
+        if (Setor is null) return NotFound();
 
         updatedSetor.Id = Setor.Id;
 
@@ -61,10 +54,7 @@ public class SetoresController : ControllerBase
     {
         var Setor = await _setoresService.GetAsync(id);
 
-        if (Setor is null)
-        {
-            return NotFound();
-        }
+        if (Setor is null) return NotFound();
 
         await _setoresService.RemoveAsync(id);
 

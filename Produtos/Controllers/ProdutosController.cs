@@ -11,9 +11,7 @@ namespace Aps6Api.Controllers;
 public class ProdutosController : ControllerBase
 {
     private readonly ProdutosService _produtosService;
-
-    public ProdutosController(ProdutosService produtosService) =>
-        _produtosService = produtosService;
+    public ProdutosController(ProdutosService produtosService) => _produtosService = produtosService;
 
     [HttpGet]
     public async Task<List<Produto>> Get() => await _produtosService.GetAsync();
@@ -23,10 +21,7 @@ public class ProdutosController : ControllerBase
     {
         var produto = await _produtosService.GetAsync(id);
 
-        if (produto is null)
-        {
-            return NotFound();
-        }
+        if (produto is null) return NotFound();
 
         return produto;
     }
@@ -44,10 +39,7 @@ public class ProdutosController : ControllerBase
     {
         var produto = await _produtosService.GetAsync(id);
 
-        if (produto is null)
-        {
-            return NotFound();
-        }
+        if (produto is null) return NotFound();
 
         updatedProduto.Id = produto.Id;
 
@@ -61,10 +53,7 @@ public class ProdutosController : ControllerBase
     {
         var produto = await _produtosService.GetAsync(id);
 
-        if (produto is null)
-        {
-            return NotFound();
-        }
+        if (produto is null) return NotFound();
 
         await _produtosService.RemoveAsync(id);
 

@@ -11,9 +11,7 @@ namespace Aps6Api.Controllers;
 public class MovimentacoesController : ControllerBase
 {
     private readonly MovimentacoesService _movimentacoesService;
-
-    public MovimentacoesController(MovimentacoesService movimentacoesService) =>
-        _movimentacoesService = movimentacoesService;
+    public MovimentacoesController(MovimentacoesService movimentacoesService) => _movimentacoesService = movimentacoesService;
 
     [HttpGet]
     public async Task<List<Movimentacao>> Get() => await _movimentacoesService.GetAsync();
@@ -23,10 +21,7 @@ public class MovimentacoesController : ControllerBase
     {
         var Movimentacao = await _movimentacoesService.GetAsync(id);
 
-        if (Movimentacao is null)
-        {
-            return NotFound();
-        }
+        if (Movimentacao is null) return NotFound();
 
         return Movimentacao;
     }
@@ -44,10 +39,7 @@ public class MovimentacoesController : ControllerBase
     {
         var Movimentacao = await _movimentacoesService.GetAsync(id);
 
-        if (Movimentacao is null)
-        {
-            return NotFound();
-        }
+        if (Movimentacao is null) return NotFound();
 
         updatedMovimentacao.Id = Movimentacao.Id;
 
@@ -61,10 +53,7 @@ public class MovimentacoesController : ControllerBase
     {
         var Movimentacao = await _movimentacoesService.GetAsync(id);
 
-        if (Movimentacao is null)
-        {
-            return NotFound();
-        }
+        if (Movimentacao is null) return NotFound();
 
         await _movimentacoesService.RemoveAsync(id);
 
