@@ -25,6 +25,8 @@ namespace Aps6Api.Services
                 aps6DatabaseSettings.Value.MovimentacoesCollectionName);
         }
 
+        #region Consultas
+
         public async Task<List<Movimentacao>> GetTodasMovimentacoes() =>
             await _movimentacoesCollection.Find(_ => true).ToListAsync();
 
@@ -48,5 +50,7 @@ namespace Aps6Api.Services
 
         public async Task ExcluirMovimentacao(string id) =>
             await _movimentacoesCollection.DeleteOneAsync(x => x.Id == id);
+
+        #endregion
     }
 }

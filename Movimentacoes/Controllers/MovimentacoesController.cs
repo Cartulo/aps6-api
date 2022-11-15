@@ -13,7 +13,15 @@ namespace Aps6Api.Controllers;
 public class MovimentacoesController : ControllerBase
 {
     private readonly MovimentacoesService _movimentacoesService;
-    public MovimentacoesController(MovimentacoesService movimentacoesService) => _movimentacoesService = movimentacoesService;
+    private readonly ProdutosService _produtosService;
+
+    public MovimentacoesController(
+        MovimentacoesService movimentacoesService,
+        ProdutosService produtosService) 
+    {
+        _movimentacoesService = movimentacoesService;
+        _produtosService = produtosService;
+    }
 
     [HttpGet]
     public async Task<List<Movimentacao>> Get() => await _movimentacoesService.GetTodasMovimentacoes();
@@ -28,18 +36,44 @@ public class MovimentacoesController : ControllerBase
         return Movimentacao;
     }
 
-    [HttpGet("{id:length(24)}/por-produto")]
-    public async Task<List<Movimentacao>?> GetPorProduto(string produtoId)
+    [HttpPost("por-produto")]
+    public async Task<MovimentacaoProdutoQuantidadesQuery?> GetPorProduto(string produtoId)
     {
-        var movimentacao = await _movimentacoesService.GetMovimentacoesPorProdutoId(produtoId);
+        var produto = await _produtosService.GetPorId(produtoId);
+        var setoresId = produto?.SetoresId;
 
-        if (movimentacao is null) return null;
+        var movimentacao = new List<Movimentacao>();
 
-        return movimentacao;
+        var quantidadeEntrada = 0;
+        var quantidadeSaida = 0;
+
+        foreach (var setorId in setoresId)
+        {
+            var movimentacaoAtual = new List<Movimentacao>();
+            var movimentacaoFutura = new List<Movimentacao>();
+            
+            movimentacaoAtual.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorAtualId(setorId, produtoId));
+            movimentacaoFutura.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorFuturoId(setorId, produtoId));
+        
+            quantidadeEntrada = quantidadeEntrada + movimentacaoAtual.Sum(o => o.SetorAtualId == setorId && o.SetorFuturoId != "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
+            // Id chumbado do "setor" saida
+            quantidadeSaida = quantidadeSaida + movimentacaoFutura.Sum(o => o.SetorFuturoId == "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
+
+            movimentacao.AddRange(movimentacaoAtual);
+            // TODO : Provavelmente sera necessario colocar uma validacao os ID chumbados tipo EntradaDeFora e SaidaPraFora
+        }
+
+        var quantidadeTotal = quantidadeEntrada - quantidadeSaida;
+
+        var movimentacaoQuantidades = new MovimentacaoProdutoQuantidadesQuery(movimentacao, produtoId, quantidadeEntrada, quantidadeSaida, quantidadeTotal);
+
+        if (movimentacaoQuantidades is null) return null;
+
+        return movimentacaoQuantidades;
     }
 
     [HttpPost("por-setor")]
-    public async Task<MovimentacaoQuantidadesQuery?> GetPorSetor(ObterQuantidadesPorSetorRequest request)
+    public async Task<MovimentacaoProdutoQuantidadesPorSetorQuery?> GetPorSetor(ObterQuantidadesPorSetorRequest request)
     {
         var movimentacaoAtual = await _movimentacoesService.GetMovimentacoesPorSetorAtualId(request.SetorId, request.ProdutoId);
         var movimentacaoFutura = await _movimentacoesService.GetMovimentacoesPorSetorFuturoId(request.SetorId, request.ProdutoId);
@@ -52,7 +86,7 @@ public class MovimentacoesController : ControllerBase
         var quantidadeSaida = movimentacaoFutura.Sum(o => o.SetorFuturoId == request.SetorId ? o.Quantidade : 0);
         var quantidadeTotal = quantidadeEntrada - quantidadeSaida;
 
-        var movimentacaoQuantidades = new MovimentacaoQuantidadesQuery(movimentacao, request.SetorId, quantidadeEntrada, quantidadeSaida, quantidadeTotal);
+        var movimentacaoQuantidades = new MovimentacaoProdutoQuantidadesPorSetorQuery(movimentacao, request.SetorId, quantidadeEntrada, quantidadeSaida, quantidadeTotal);
 
         if (movimentacaoQuantidades is null) return null;
 
