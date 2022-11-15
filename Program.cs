@@ -18,9 +18,9 @@ var politicaCors = "_Aps6policy";
 services.AddCors(o =>
     o.AddPolicy(name: politicaCors, builder =>
         {
-            builder.WithOrigins("http://localhost.com:7070")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
+            builder.AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowAnyOrigin();
         }));
 
 services.AddControllers();
