@@ -25,19 +25,28 @@ namespace Aps6Api.Services
                 aps6DatabaseSettings.Value.MovimentacoesCollectionName);
         }
 
-        public async Task<List<Movimentacao>> GetAsync() =>
+        public async Task<List<Movimentacao>> GetTodasMovimentacoes() =>
             await _movimentacoesCollection.Find(_ => true).ToListAsync();
 
-        public async Task<Movimentacao?> GetAsync(string id) =>
+        public async Task<Movimentacao?> GetMovimentacaoPorId(string id) =>
             await _movimentacoesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Movimentacao novoMovimentacao) =>
+        public async Task<List<Movimentacao>> GetMovimentacoesPorProdutoId(string produtoId) =>
+            await _movimentacoesCollection.Find(x => x.ProdutoId == produtoId).ToListAsync(); 
+
+        public async Task<List<Movimentacao>> GetMovimentacoesPorSetorAtualId(string setorId, string produtoId) =>
+            await _movimentacoesCollection.Find(x => x.SetorAtualId == setorId && x.ProdutoId == produtoId).ToListAsync(); 
+
+        public async Task<List<Movimentacao>> GetMovimentacoesPorSetorFuturoId(string setorId, string produtoId) =>
+            await _movimentacoesCollection.Find(x => x.SetorFuturoId == setorId && x.ProdutoId == produtoId).ToListAsync();  
+
+        public async Task AdicionarMovimentacao(Movimentacao novoMovimentacao) =>
             await _movimentacoesCollection.InsertOneAsync(novoMovimentacao);
 
-        public async Task UpdateAsync(string id, Movimentacao editarMovimentacao) =>
+        public async Task AtualizarMovimentacao(string id, Movimentacao editarMovimentacao) =>
             await _movimentacoesCollection.ReplaceOneAsync(x => x.Id == id, editarMovimentacao);
 
-        public async Task RemoveAsync(string id) =>
+        public async Task ExcluirMovimentacao(string id) =>
             await _movimentacoesCollection.DeleteOneAsync(x => x.Id == id);
     }
 }
