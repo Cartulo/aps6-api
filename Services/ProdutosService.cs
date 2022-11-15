@@ -22,19 +22,19 @@ namespace Aps6Api.Services
             aps6DatabaseSettings.Value.ProdutosCollectionName);
     }
 
-    public async Task<List<Produto>> GetAsync() =>
+    public async Task<List<Produto>> GetTodosProdutos() =>
         await _produtosCollection.Find(_ => true).ToListAsync();
 
-    public async Task<Produto?> GetAsync(string id) =>
+    public async Task<Produto?> GetPorId(string id) =>
         await _produtosCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-    public async Task CreateAsync(Produto novoProduto) =>
+    public async Task AdicionarProduto(Produto novoProduto) =>
         await _produtosCollection.InsertOneAsync(novoProduto);
 
-    public async Task UpdateAsync(string id, Produto editarProduto) =>
-        await _produtosCollection.ReplaceOneAsync(x => x.Id == id, editarProduto);
+    public async Task AtualizarProduto(string id, Produto produtoAtualizado) =>
+        await _produtosCollection.ReplaceOneAsync(x => x.Id == id, produtoAtualizado);
 
-    public async Task RemoveAsync(string id) =>
+    public async Task ExcluirProduto(string id) =>
         await _produtosCollection.DeleteOneAsync(x => x.Id == id);
     }
 }

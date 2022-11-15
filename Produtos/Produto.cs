@@ -13,6 +13,6 @@ namespace Aps6Api.Produtos
         public string Nome { get; set; } = null!;
 
         [BsonElement("Setor")]
-        public string Setor { get; set; } = null!;
+        public string? Setor { get; set; }
     }
 }

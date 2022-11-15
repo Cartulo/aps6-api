@@ -14,12 +14,12 @@ public class ProdutosController : ControllerBase
     public ProdutosController(ProdutosService produtosService) => _produtosService = produtosService;
 
     [HttpGet]
-    public async Task<List<Produto>> Get() => await _produtosService.GetAsync();
+    public async Task<List<Produto>> Get() => await _produtosService.GetTodosProdutos();
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Produto>> Get(string id)
     {
-        var produto = await _produtosService.GetAsync(id);
+        var produto = await _produtosService.GetPorId(id);
 
         if (produto is null) return NotFound();
 
@@ -27,23 +27,23 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Produto newProduto)
+    public async Task<IActionResult> Post(Produto novoProduto)
     {
-        await _produtosService.CreateAsync(newProduto);
+        await _produtosService.AdicionarProduto(novoProduto);
 
-        return CreatedAtAction(nameof(Get), new { id = newProduto.Id }, newProduto);
+        return CreatedAtAction(nameof(Get), new { id = novoProduto.Id }, novoProduto);
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Produto updatedProduto)
+    public async Task<IActionResult> Update(string id, Produto produtoAtualizado)
     {
-        var produto = await _produtosService.GetAsync(id);
+        var produto = await _produtosService.GetPorId(id);
 
         if (produto is null) return NotFound();
 
-        updatedProduto.Id = produto.Id;
+        produtoAtualizado.Id = produto.Id;
 
-        await _produtosService.UpdateAsync(id, updatedProduto);
+        await _produtosService.AtualizarProduto(id, produtoAtualizado);
 
         return NoContent();
     }
@@ -51,11 +51,11 @@ public class ProdutosController : ControllerBase
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var produto = await _produtosService.GetAsync(id);
+        var produto = await _produtosService.GetPorId(id);
 
         if (produto is null) return NotFound();
 
-        await _produtosService.RemoveAsync(id);
+        await _produtosService.ExcluirProduto(id);
 
         return NoContent();
     }

@@ -15,12 +15,12 @@ public class SetoresController : ControllerBase
     public SetoresController(SetoresService setoresService) => _setoresService = setoresService;
 
     [HttpGet]
-    public async Task<List<Setor>> Get() => await _setoresService.GetAsync();
+    public async Task<List<Setor>> Get() => await _setoresService.GetTodosSetores();
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Setor>> Get(string id)
     {
-        var Setor = await _setoresService.GetAsync(id);
+        var Setor = await _setoresService.GetPorId(id);
 
         if (Setor is null) return NotFound();
 
@@ -28,23 +28,23 @@ public class SetoresController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Setor newSetor)
+    public async Task<IActionResult> Post(Setor novoSetor)
     {
-        await _setoresService.CreateAsync(newSetor);
+        await _setoresService.AdicionarSetor(novoSetor);
 
-        return CreatedAtAction(nameof(Get), new { id = newSetor.Id }, newSetor);
+        return CreatedAtAction(nameof(Get), new { id = novoSetor.Id }, novoSetor);
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Setor updatedSetor)
+    public async Task<IActionResult> Update(string id, Setor setorAtualizado)
     {
-        var Setor = await _setoresService.GetAsync(id);
+        var Setor = await _setoresService.GetPorId(id);
 
         if (Setor is null) return NotFound();
 
-        updatedSetor.Id = Setor.Id;
+        setorAtualizado.Id = Setor.Id;
 
-        await _setoresService.UpdateAsync(id, updatedSetor);
+        await _setoresService.AtualizarSetor(id, setorAtualizado);
 
         return NoContent();
     }
@@ -52,11 +52,11 @@ public class SetoresController : ControllerBase
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var Setor = await _setoresService.GetAsync(id);
+        var Setor = await _setoresService.GetPorId(id);
 
         if (Setor is null) return NotFound();
 
-        await _setoresService.RemoveAsync(id);
+        await _setoresService.ExcluirSetor(id);
 
         return NoContent();
     }
