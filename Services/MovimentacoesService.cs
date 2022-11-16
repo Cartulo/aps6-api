@@ -36,11 +36,11 @@ namespace Aps6Api.Services
         public async Task<List<Movimentacao>> GetMovimentacoesPorProdutoId(string produtoId) =>
             await _movimentacoesCollection.Find(x => x.ProdutoId == produtoId).ToListAsync(); 
 
-        public async Task<List<Movimentacao>> GetMovimentacoesPorSetorAtualId(string setorId, string produtoId) =>
-            await _movimentacoesCollection.Find(x => x.SetorAtualId == setorId && x.ProdutoId == produtoId).ToListAsync(); 
+        public async Task<List<Movimentacao>> GetMovimentacoesPorSetorEntradaId(string setorId, string produtoId) =>
+            await _movimentacoesCollection.Find(x => x.SetorEntradaId == setorId && x.ProdutoId == produtoId).ToListAsync(); 
 
-        public async Task<List<Movimentacao>> GetMovimentacoesPorSetorFuturoId(string setorId, string produtoId) =>
-            await _movimentacoesCollection.Find(x => x.SetorFuturoId == setorId && x.ProdutoId == produtoId).ToListAsync();  
+        public async Task<List<Movimentacao>> GetMovimentacoesPorSetorSaidaId(string setorId, string produtoId) =>
+            await _movimentacoesCollection.Find(x => x.SetorSaidaId == setorId && x.ProdutoId == produtoId).ToListAsync();  
 
         public async Task AdicionarMovimentacao(Movimentacao novoMovimentacao) =>
             await _movimentacoesCollection.InsertOneAsync(novoMovimentacao);

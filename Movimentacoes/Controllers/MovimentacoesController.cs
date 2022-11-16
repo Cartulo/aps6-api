@@ -49,17 +49,17 @@ public class MovimentacoesController : ControllerBase
 
         foreach (var setorId in setoresId)
         {
-            var movimentacaoAtual = new List<Movimentacao>();
-            var movimentacaoFutura = new List<Movimentacao>();
+            var movimentacaoEntrada = new List<Movimentacao>();
+            var movimentacaoSaida = new List<Movimentacao>();
             
-            movimentacaoAtual.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorAtualId(setorId, produtoId));
-            movimentacaoFutura.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorFuturoId(setorId, produtoId));
+            movimentacaoEntrada.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorEntradaId(setorId, produtoId));
+            movimentacaoSaida.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorSaidaId(setorId, produtoId));
         
-            quantidadeEntrada = quantidadeEntrada + movimentacaoAtual.Sum(o => o.SetorAtualId == setorId && o.SetorFuturoId != "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
+            quantidadeEntrada = quantidadeEntrada + movimentacaoEntrada.Sum(o => o.SetorEntradaId == setorId && o.SetorSaidaId != "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
             // Id chumbado do "setor" saida
-            quantidadeSaida = quantidadeSaida + movimentacaoFutura.Sum(o => o.SetorFuturoId == "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
+            quantidadeSaida = quantidadeSaida + movimentacaoSaida.Sum(o => o.SetorSaidaId == "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
 
-            movimentacao.AddRange(movimentacaoAtual);
+            movimentacao.AddRange(movimentacaoEntrada);
             // TODO : Provavelmente sera necessario colocar uma validacao os ID chumbados tipo EntradaDeFora e SaidaPraFora
         }
 
@@ -75,15 +75,15 @@ public class MovimentacoesController : ControllerBase
     [HttpPost("por-setor")]
     public async Task<MovimentacaoProdutoQuantidadesPorSetorQuery?> GetPorSetor(ObterQuantidadesPorSetorRequest request)
     {
-        var movimentacaoAtual = await _movimentacoesService.GetMovimentacoesPorSetorAtualId(request.SetorId, request.ProdutoId);
-        var movimentacaoFutura = await _movimentacoesService.GetMovimentacoesPorSetorFuturoId(request.SetorId, request.ProdutoId);
+        var movimentacaoEntrada = await _movimentacoesService.GetMovimentacoesPorSetorEntradaId(request.SetorId, request.ProdutoId);
+        var movimentacaoSaida = await _movimentacoesService.GetMovimentacoesPorSetorSaidaId(request.SetorId, request.ProdutoId);
 
         var movimentacao = new List<Movimentacao>();
-        movimentacao.AddRange(movimentacaoAtual);
-        movimentacao.AddRange(movimentacaoFutura);
+        movimentacao.AddRange(movimentacaoEntrada);
+        movimentacao.AddRange(movimentacaoSaida);
 
-        var quantidadeEntrada = movimentacaoAtual.Sum(o => o.SetorAtualId == request.SetorId ? o.Quantidade : 0);
-        var quantidadeSaida = movimentacaoFutura.Sum(o => o.SetorFuturoId == request.SetorId ? o.Quantidade : 0);
+        var quantidadeEntrada = movimentacaoEntrada.Sum(o => o.SetorEntradaId == request.SetorId ? o.Quantidade : 0);
+        var quantidadeSaida = movimentacaoSaida.Sum(o => o.SetorSaidaId == request.SetorId ? o.Quantidade : 0);
         var quantidadeTotal = quantidadeEntrada - quantidadeSaida;
 
         var movimentacaoQuantidades = new MovimentacaoProdutoQuantidadesPorSetorQuery(movimentacao, request.SetorId, quantidadeEntrada, quantidadeSaida, quantidadeTotal);
