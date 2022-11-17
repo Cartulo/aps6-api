@@ -16,9 +16,9 @@ namespace Aps6Api.Movimentacoes
         public string ProdutoId { get; set; } = null!;
 
         [BsonElement("SetorEntradaId")]
-        public string SetorEntradaId { get; set; } = null!;
+        public string? SetorEntradaId { get; set; } = null!;
 
         [BsonElement("SetorSaidaId")]
-        public string SetorSaidaId { get; set; } = null!;
+        public string? SetorSaidaId { get; set; } = null!;
     }
 }

@@ -37,7 +37,7 @@ namespace Aps6Api.Services
             await _movimentacoesCollection.Find(x => x.ProdutoId == produtoId).ToListAsync(); 
 
         public async Task<List<Movimentacao>> GetMovimentacoesPorSetorEntradaId(string setorId, string produtoId) =>
-            await _movimentacoesCollection.Find(x => x.SetorEntradaId == setorId && x.ProdutoId == produtoId).ToListAsync(); 
+            await _movimentacoesCollection.Find(x => x.ProdutoId == produtoId).ToListAsync(); 
 
         public async Task<List<Movimentacao>> GetMovimentacoesPorSetorSaidaId(string setorId, string produtoId) =>
             await _movimentacoesCollection.Find(x => x.SetorSaidaId == setorId && x.ProdutoId == produtoId).ToListAsync();  

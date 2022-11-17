@@ -55,13 +55,11 @@ public class MovimentacoesController : ControllerBase
             movimentacaoEntrada.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorEntradaId(setorId, produtoId));
             movimentacaoSaida.AddRange(await _movimentacoesService.GetMovimentacoesPorSetorSaidaId(setorId, produtoId));
         
-            quantidadeEntrada = quantidadeEntrada + movimentacaoEntrada.Sum(o => o.SetorEntradaId == setorId && o.SetorSaidaId != "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
-            // Id chumbado do "setor" saida
-            quantidadeSaida = quantidadeSaida + movimentacaoSaida.Sum(o => o.SetorSaidaId == "637387a9cb27f8f2f536e482" ? o.Quantidade : 0);
+            quantidadeEntrada = quantidadeEntrada + movimentacaoEntrada.Sum(o => o.SetorEntradaId == setorId && o.SetorSaidaId == "" ? o.Quantidade : 0);
 
-            movimentacao.AddRange(movimentacaoEntrada);
-            // TODO : Provavelmente sera necessario colocar uma validacao os ID chumbados tipo EntradaDeFora e SaidaPraFora
+            quantidadeSaida = quantidadeSaida + movimentacaoSaida.Sum(o => o.SetorSaidaId != "" && o.SetorEntradaId == "" ? o.Quantidade : 0);
         }
+        movimentacao.AddRange(await _movimentacoesService.GetMovimentacoesPorProdutoId(produtoId));
 
         var quantidadeTotal = quantidadeEntrada - quantidadeSaida;
 
