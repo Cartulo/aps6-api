@@ -14,13 +14,16 @@ public class MovimentacoesController : ControllerBase
 {
     private readonly MovimentacoesService _movimentacoesService;
     private readonly ProdutosService _produtosService;
+    private readonly SetoresService _setoresService;
 
     public MovimentacoesController(
         MovimentacoesService movimentacoesService,
-        ProdutosService produtosService) 
+        ProdutosService produtosService,
+        SetoresService setoresService) 
     {
         _movimentacoesService = movimentacoesService;
         _produtosService = produtosService;
+        _setoresService = setoresService;
     }
 
     [HttpGet]
@@ -40,7 +43,10 @@ public class MovimentacoesController : ControllerBase
     public async Task<MovimentacaoProdutoQuantidadesQuery?> GetPorProduto(string produtoId)
     {
         var produto = await _produtosService.GetPorId(produtoId);
-        var setoresId = produto?.SetoresId;
+        var setores = await _setoresService.GetTodosSetores();
+        List<string> setoresId = new List<string>();
+        
+        setores.ForEach(o => setoresId.Add(o.Id));
 
         var movimentacao = new List<Movimentacao>();
 
